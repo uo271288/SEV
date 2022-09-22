@@ -12,6 +12,16 @@
 #define WIDTH 480
 #define HEIGHT 320
 
+//*********
+// read the guide
+enum class Orientation {
+	Right, Left
+};
+
+enum  State {
+	Idle, Moving, Dying
+};
+//*********
 class Game
 {
 public:

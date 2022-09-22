@@ -2,11 +2,12 @@
 #include "Game.h"
 
 Animation::Animation(std::string filename, int actorWidth, int actorHeight,
-	int fileWidth, int fileHeight, int updateFrequency, int totalFrames)
+	int fileWidth, int fileHeight, int updateFrequency, int totalFrames, bool loop)
 	:actorWidth(actorWidth), actorHeight(actorHeight),
 	fileWidth(fileWidth), fileHeight(fileHeight),
 	updateFrequency(updateFrequency), totalFrames(totalFrames),
-	frameWidth(fileWidth / totalFrames), frameHeight(fileHeight) {
+	frameWidth(fileWidth / totalFrames), frameHeight(fileHeight),
+	loop(loop) {
 	texture = Game::getTexture(filename);
 	source = { 0,0,frameWidth,frameHeight };
 }
@@ -17,6 +18,10 @@ bool Animation::update() {
 	if (updateTime > updateFrequency) {
 		updateTime = 0;
 		currentFrame = (currentFrame + 1) % totalFrames;
+
+		if (currentFrame == 0 && !loop) {
+			return true;
+		}
 	}
 	source.x = currentFrame * frameWidth;
 	return false;
