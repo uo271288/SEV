@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Background.h"
 #include "Enemy.h"
+#include "Text.h"
 
 class GameLayer : public Layer
 {
@@ -21,6 +22,10 @@ public:
 
 	Player* player;
 	Background* background;
+	Actor* backgroundPoints;
+	int points;
+	Text* textPoints;
+
 	std::list<Enemy*> enemies;
 	std::list<Projectile*> projectiles;
 

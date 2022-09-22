@@ -15,10 +15,8 @@ Game::Game() {
 	// https://wiki.libsdl.org/SDL_HINT_RENDER_SCALE_QUALITY
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-	gameLayer = new GameLayer();
-
-	loopActive = true; // bucle activo
-	loop();
+	TTF_Init();
+	font = TTF_OpenFont("res/sans.ttf", 24);
 }
 
 void Game::loop() {
@@ -30,7 +28,7 @@ void Game::loop() {
 		gameLayer->processControls();
 		gameLayer->update();
 		gameLayer->draw();
-		
+
 		endTick = SDL_GetTicks();
 		deltaTick = endTick - initTick;
 
@@ -38,4 +36,39 @@ void Game::loop() {
 			SDL_Delay(FRAME_TIME - deltaTick);
 		}
 	}
+}
+
+void Game::start() {
+	gameLayer = new GameLayer();
+
+	loopActive = true; // bucle activo
+	loop();
+}
+
+void Game::scale() {
+	scaledToMax = !scaledToMax;
+
+	if (scaledToMax) {
+		SDL_DisplayMode PCdisplay;
+		SDL_GetCurrentDisplayMode(0, &PCdisplay);
+		float scaleX = (float)PCdisplay.w / (float)WIDTH;
+		float scaleY = (float)PCdisplay.h / (float)HEIGHT;
+		// Necesitamos la menor de las 2 escalas para no deformar el juego
+		scaleLower = scaleX;
+		if (scaleY < scaleX) {
+			scaleLower = scaleY;
+		}
+		// Cambiar dimensiones ventana
+		SDL_SetWindowSize(window, WIDTH * scaleLower, HEIGHT * scaleLower);
+		// Cambiar escala del render
+		SDL_RenderSetScale(renderer, scaleLower, scaleLower);
+	}
+	else { // Escala Original
+		scaleLower = 1;
+		// Cambiar dimensiones ventana
+		SDL_SetWindowSize(window, WIDTH, HEIGHT);
+		// Cambiar escala del render
+		SDL_RenderSetScale(renderer, 1, 1);
+	}
+
 }
