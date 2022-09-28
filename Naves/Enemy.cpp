@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
 Enemy::Enemy(float x, float y) :Actor("res/enemigo.png", x, y, 36, 40) {
-	aMoving = new Animation("res/enemigo_movimiento.png", width, height, 108, 40, 6, 3);
+	aMoving = new Animation("res/enemigo_movimiento.png", width, height, 108, 40, 6, 3,true);
 	animation = aMoving;
 	vx = -1;
 }

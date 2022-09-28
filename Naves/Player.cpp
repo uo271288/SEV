@@ -28,3 +28,7 @@ void Player::moveX(float direction) {
 void Player::moveY(float direction) {
 	vy = direction * 3;
 }
+
+void Player::draw() {
+
+}

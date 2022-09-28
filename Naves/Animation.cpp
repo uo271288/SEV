@@ -7,7 +7,8 @@ Animation::Animation(std::string filename, int actorWidth, int actorHeight,
 	fileWidth(fileWidth), fileHeight(fileHeight),
 	updateFrequency(updateFrequency), totalFrames(totalFrames),
 	frameWidth(fileWidth / totalFrames), frameHeight(fileHeight),
-	loop(loop) {
+	loop(loop)
+{
 	texture = Game::getTexture(filename);
 	source = { 0,0,frameWidth,frameHeight };
 }
