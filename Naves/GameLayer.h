@@ -7,6 +7,8 @@
 #include "Background.h"
 #include "Enemy.h"
 #include "Text.h"
+#include "Tile.h"
+#include "Space.h"
 
 class GameLayer : public Layer
 {
@@ -18,6 +20,10 @@ public:
 	void update() override;
 	void draw() override;
 
+	void loadMap(std::string name);
+	void loadMapObject(char character, int x, int y);
+	void calculateScroll();
+
 	void keysToControls(SDL_Event event);
 
 	Player* player;
@@ -25,6 +31,7 @@ public:
 	Actor* backgroundPoints;
 	int points;
 	Text* textPoints;
+	std::list<Tile*> tiles;
 
 	std::list<Enemy*> enemies;
 	std::list<Projectile*> projectiles;
@@ -34,4 +41,9 @@ public:
 	int controlMoveY = 0;
 
 	int newEnemyTime = 0;
+
+	Space* space;
+
+	float scrollX = 0;
+	int mapWidth = 0;
 };

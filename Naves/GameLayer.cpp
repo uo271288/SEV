@@ -2,6 +2,7 @@
 #include "Game.h"
 
 #include <unordered_set>
+#include <fstream>
 
 GameLayer::GameLayer() {
 	init();
@@ -9,7 +10,6 @@ GameLayer::GameLayer() {
 
 void GameLayer::init()
 {
-	player = new Player(50, 50);
 	background = new Background("res/fondo_2.png", WIDTH * 0.5, HEIGHT * 0.5);
 
 	enemies.clear();
@@ -18,6 +18,8 @@ void GameLayer::init()
 	points = 0;
 	textPoints = new Text("0", WIDTH * .92f, HEIGHT * .04f);
 	backgroundPoints = new Actor("res/icono_puntos.png", WIDTH * .85f, HEIGHT * .05f, 24, 24);
+
+	loadMap("res/0.txt");
 }
 
 void GameLayer::processControls()
@@ -40,15 +42,6 @@ void GameLayer::processControls()
 
 void GameLayer::update()
 {
-	// Generar enemigos
-	newEnemyTime--;
-	if (newEnemyTime <= 0) {
-		int rX = (rand() % (600 - 500)) + 1 + 500;
-		int rY = (rand() % (300 - 60)) + 1 + 60;
-		enemies.push_back(new Enemy(rX, rY));
-		newEnemyTime = 110;
-	}
-
 	player->update();
 
 	for (auto const& enemy : enemies) {
@@ -99,6 +92,10 @@ void GameLayer::update()
 void GameLayer::draw()
 {
 	background->draw();
+	for (auto const& tile : tiles) {
+		tile->draw();
+	}
+
 	for (auto const& enemy : enemies) {
 		enemy->draw();
 	}
@@ -172,4 +169,48 @@ void GameLayer::keysToControls(SDL_Event event) {
 			break;
 		}
 	}
+}
+
+void GameLayer::loadMap(std::string name) {
+	std::ifstream file(name);
+	int row = 0;
+	std::string line;
+
+	while (std::getline(file, line)) {
+		mapWidth = line.size();
+		for (int column = 0; column < line.size(); column++) {
+			int x = 40 / 2 + column * 40;
+			int y = 32 + row * 32;
+			loadMapObject(line[column], x, y);
+			std::cout << line[column];
+		}
+		std::cout << std::endl;
+		row++;
+	}
+}
+
+void GameLayer::loadMapObject(char character, int x, int y) {
+	switch (character)
+	{
+	case 'E': {
+		Enemy* enemy = new Enemy(x, y);
+		enemy->y -= enemy->height / 2;
+		enemies.emplace_back(enemy);
+		break;
+	}
+	case '1':
+		player = new Player(x, y);
+		player->y -= player->height / 2;
+		break;
+	case '#': {
+		Tile* tile = new Tile("res/bloque_tierra.png", x, y);
+		tile->y -= tile->height / 2;
+		tiles.emplace_back(tile);
+		break;
+	}
+	}
+}
+
+void GameLayer::calculateScroll() {
+
 }
