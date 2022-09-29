@@ -8,15 +8,15 @@ Actor::Actor(std::string filename, float x, float y, int width, int height)
 	texture = Game::getTexture(filename);
 }
 
-void Actor::draw() {
-	SDL_Rect source;
-	source.x = 0;
-	source.y = 0;
-	source.w = fileWidth;
-	source.h = fileHeight;
+void Actor::draw(int scrollX) {
+	SDL_Rect source{
+	source.x = 0,
+	source.y = 0,
+	source.w = fileWidth, 
+	source.h = fileHeight };
 
 	SDL_Rect destination;
-	destination.x = x - width / 2;
+	destination.x = x - width / 2 - scrollX;
 	destination.y = y - height / 2;
 	destination.w = width;
 	destination.h = height;

@@ -8,10 +8,11 @@ GameLayer::GameLayer() {
 	init();
 }
 
-void GameLayer::init()
-{
+void GameLayer::init() {
+	space = new Space(1);
 	background = new Background("res/fondo_2.png", WIDTH * 0.5, HEIGHT * 0.5);
 
+	tiles.clear();
 	enemies.clear();
 	projectiles.clear();
 
@@ -19,7 +20,7 @@ void GameLayer::init()
 	textPoints = new Text("0", WIDTH * .92f, HEIGHT * .04f);
 	backgroundPoints = new Actor("res/icono_puntos.png", WIDTH * .85f, HEIGHT * .05f, 24, 24);
 
-	loadMap("res/0.txt");
+	loadMap("res/1.txt");
 }
 
 void GameLayer::processControls()
@@ -33,6 +34,7 @@ void GameLayer::processControls()
 		Projectile* newProjectile = player->shoot();
 		if (newProjectile) {
 			projectiles.push_back(newProjectile);
+			space->addDynamicActor(newProjectile);
 		}
 	}
 
@@ -43,6 +45,7 @@ void GameLayer::processControls()
 void GameLayer::update()
 {
 	player->update();
+	calculateScroll();
 
 	for (auto const& enemy : enemies) {
 		enemy->update();
@@ -79,11 +82,13 @@ void GameLayer::update()
 	}
 	for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
+		space->removeDynamicActor(delEnemy);
 	}
 	deleteEnemies.clear();
 
 	for (auto const& delProjectile : deleteProjectiles) {
 		projectiles.remove(delProjectile);
+		space->removeDynamicActor(delProjectile);
 	}
 	deleteProjectiles.clear();
 
@@ -93,18 +98,18 @@ void GameLayer::draw()
 {
 	background->draw();
 	for (auto const& tile : tiles) {
-		tile->draw();
+		tile->draw(scrollX);
 	}
 
 	for (auto const& enemy : enemies) {
-		enemy->draw();
+		enemy->draw(scrollX);
 	}
 
 	for (auto const& projectile : projectiles) {
-		projectile->draw();
+		projectile->draw(scrollX);
 	}
 
-	player->draw();
+	player->draw(scrollX);
 
 	backgroundPoints->draw();
 	textPoints->draw();
@@ -190,27 +195,39 @@ void GameLayer::loadMap(std::string name) {
 }
 
 void GameLayer::loadMapObject(char character, int x, int y) {
-	switch (character)
-	{
+	switch (character) {
 	case 'E': {
 		Enemy* enemy = new Enemy(x, y);
 		enemy->y -= enemy->height / 2;
 		enemies.emplace_back(enemy);
+		space->addDynamicActor(enemy);
 		break;
 	}
 	case '1':
 		player = new Player(x, y);
 		player->y -= player->height / 2;
+		space->addDynamicActor(player);
 		break;
 	case '#': {
 		Tile* tile = new Tile("res/bloque_tierra.png", x, y);
 		tile->y -= tile->height / 2;
 		tiles.emplace_back(tile);
+		space->addStaticActor(tile);
 		break;
 	}
 	}
 }
 
 void GameLayer::calculateScroll() {
+	if (player->x > WIDTH * .3f
+		|| player->x < mapWidth - WIDTH * .3f) {
 
+		if (player->x - scrollX < WIDTH * .3f) {
+			scrollX = player->x - WIDTH * .3f;
+		}
+		if (player->x - scrollX > WIDTH * .7f) {
+			scrollX = player->x - WIDTH * .7f;
+		}
+
+	}
 }

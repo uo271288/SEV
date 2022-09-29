@@ -7,7 +7,7 @@ class Enemy : public Actor
 public:
 	Enemy(float x, float y);
 	void update();
-	void draw() override;
+	void draw(int scrollX) override;
 	void impacted();
 
 	Animation* aMoving;

@@ -18,7 +18,6 @@ void Enemy::update() {
 	{
 	case State::Moving:
 		animation = aMoving;
-		x += vx;
 		break;
 	case State::Dying:
 		animation = aDying;
@@ -26,8 +25,8 @@ void Enemy::update() {
 	}
 }
 
-void Enemy::draw() {
-	animation->draw(x, y);
+void Enemy::draw(int scrollX) {
+	animation->draw(x - scrollX, y);
 }
 
 void Enemy::impacted() {

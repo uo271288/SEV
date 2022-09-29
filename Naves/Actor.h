@@ -16,11 +16,13 @@ class Actor
 public:
 	Actor(std::string filename, float x, float y, int width, int height);
 
-	virtual void draw();
+	virtual void draw(int scrollX = 0);
 
 	bool isOverlapping(Actor* actor);
 
 	float x, y, vx = 0, vy = 0;
 	int width, height, fileWidth, fileHeight;
 	SDL_Texture* texture;
+
+	bool hasCollisionDown;
 };

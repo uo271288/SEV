@@ -65,8 +65,6 @@ void Player::update() {
 	if (shootTime > 0) {
 		shootTime--;
 	}
-	x = x + vx;
-	y = y + vy;
 }
 
 void Player::moveX(float direction) {
@@ -77,6 +75,6 @@ void Player::moveY(float direction) {
 	vy = direction * 3;
 }
 
-void Player::draw() {
-	animation->draw(x, y);
+void Player::draw(int scrollX) {
+	animation->draw(x - scrollX, y);
 }
