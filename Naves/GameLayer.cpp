@@ -10,7 +10,7 @@ GameLayer::GameLayer() {
 void GameLayer::init()
 {
 	player = new Player(50, 50);
-	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5);
+	background = new Background("res/fondo_2.png", WIDTH * 0.5, HEIGHT * 0.5);
 
 	enemies.clear();
 	projectiles.clear();
@@ -72,15 +72,18 @@ void GameLayer::update()
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
 			if (enemy->isOverlapping(projectile)) {
-				deleteEnemies.emplace(enemy);
 				deleteProjectiles.emplace(projectile);
-
+				enemy->impacted();
 				points++;
 				textPoints->content = std::to_string(points);
 			}
 		}
 	}
-
+	for (auto const& enemy : enemies) {
+		if (enemy->state == State::Dead) {
+			deleteEnemies.emplace(enemy);
+		}
+	}
 	for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
 	}
@@ -117,9 +120,9 @@ void GameLayer::keysToControls(SDL_Event event) {
 		int code = event.key.keysym.sym;
 		// Pulsada
 		switch (code) {
-		//case SDLK_ESCAPE:
-		//	Game::getInstance().loopActive = false;
-		//	break;
+		case SDLK_ESCAPE:
+			Game::getInstance().loopActive = false;
+			break;
 		case SDLK_1:
 			Game::getInstance().scale();
 			break;

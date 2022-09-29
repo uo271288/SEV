@@ -3,7 +3,7 @@
 
 int main() 
 {
-	Game game = Game::getInstance();
+	Game& game = Game::getInstance();
 	game.start();
 	return 0;
 }

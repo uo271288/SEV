@@ -3,6 +3,14 @@
 #include <SDL_image.h>
 #include <string>
 
+enum class Orientation {
+	Right, Left
+};
+
+enum class State {
+	Moving, Jumping, Dying, Dead, Shooting
+};
+
 class Actor
 {
 public:

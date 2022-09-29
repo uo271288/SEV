@@ -25,4 +25,7 @@ public:
 	Animation* aRunningLeft;
 	Animation* aShootingRight;
 	Animation* aShootingLeft;
+
+	State state = State::Moving;
+	Orientation orientation = Orientation::Right;
 };

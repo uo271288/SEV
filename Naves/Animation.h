@@ -6,7 +6,7 @@ class Animation
 {
 public:
 	Animation(std::string filename, int actorWidth, int actorHeight, int fileWidth,
-		int fileHeight, int updateFrequency, int totalFrames, bool loop);
+		int fileHeight, int updateFrequency, int totalFrames, bool loop = true);
 
 	bool update();
 	void draw(float x, float y);
