@@ -29,6 +29,10 @@ public:
 	int points;
 	Text* textPoints;
 
+	Actor* backgroundLife;
+	int life;
+	Text* textLife;
+
 	std::list<Enemy*> enemies;
 	std::list<Projectile*> projectiles;
 	std::list<Coin*> coins;

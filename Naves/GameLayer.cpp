@@ -19,6 +19,9 @@ void GameLayer::init()
 	points = 0;
 	textPoints = new Text("0", WIDTH * .92f, HEIGHT * .04f);
 	backgroundPoints = new Actor("res/icono_puntos.png", WIDTH * .85f, HEIGHT * .05f, 24, 24);
+	life = 3;
+	textLife = new Text("3", WIDTH * .80f, HEIGHT * .04f);
+	backgroundLife = new Actor("res/corazon.png", WIDTH * .73f, HEIGHT * .07f, 44, 36);
 }
 
 void GameLayer::processControls()
@@ -71,13 +74,6 @@ void GameLayer::update()
 		projectile->update();
 	}
 
-	for (auto const& enemy : enemies) {
-		if (player->isOverlapping(enemy)) {
-			init();
-			return;
-		}
-	}
-
 	std::unordered_set<Enemy*> deleteEnemies;
 	std::unordered_set<Projectile*> deleteProjectiles;
 	std::unordered_set<Coin*> deleteCoins;
@@ -93,6 +89,19 @@ void GameLayer::update()
 			}
 		}
 	}
+
+	for (auto const& enemy : enemies) {
+		if (player->isOverlapping(enemy)) {
+			deleteEnemies.emplace(enemy);
+			life--;
+			textLife->content = std::to_string(life);
+			if (life <= 0) {
+				init();
+				return;
+			}
+		}
+	}
+
 
 	for (auto const& coin : coins) {
 		if (player->isOverlapping(coin)) {
@@ -138,6 +147,8 @@ void GameLayer::draw()
 	backgroundPoints->draw();
 	textPoints->draw();
 
+	backgroundLife->draw();
+	textLife->draw();
 	SDL_RenderPresent(Game::getRenderer());
 }
 
