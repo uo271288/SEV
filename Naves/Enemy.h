@@ -5,8 +5,8 @@
 class Enemy : public Actor
 {
 public:
-	Enemy(float x, float y);
-	void update();
+	Enemy(std::string filename, float x, float y, int width, int height);
+	virtual void update();
 	void draw() override;
 
 	Animation* aMoving;

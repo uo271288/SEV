@@ -43,9 +43,12 @@ void GameLayer::update()
 	// Generar enemigos
 	newEnemyTime--;
 	if (newEnemyTime <= 0) {
-		int rX = (rand() % (600 - 500)) + 1 + 500;
-		int rY = (rand() % (300 - 60)) + 1 + 60;
-		enemies.push_back(new Enemy(rX, rY));
+		int rXShip = (rand() % (600 - 500)) + 1 + 500;
+		int rYShip = (rand() % (300 - 60)) + 1 + 60;
+		int rXAsteroid = (rand() % (480) + 50);
+		int rYAsteroid = (rand() % (300 - 60)) + 500;
+		enemies.push_back(new Ship("res/enemigo_movimiento.png", rXShip, rYShip, 36, 40));
+		enemies.push_back(new Asteroid("res/asteroide_movimiento.png", rXAsteroid, rYAsteroid, 50, 51));
 		newEnemyTime = 110;
 	}
 
@@ -117,9 +120,9 @@ void GameLayer::keysToControls(SDL_Event event) {
 		int code = event.key.keysym.sym;
 		// Pulsada
 		switch (code) {
-		//case SDLK_ESCAPE:
-		//	Game::getInstance().loopActive = false;
-		//	break;
+		case SDLK_ESCAPE:
+			Game::getInstance().loopActive = false;
+			break;
 		case SDLK_1:
 			Game::getInstance().scale();
 			break;

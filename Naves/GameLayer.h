@@ -7,6 +7,8 @@
 #include "Background.h"
 #include "Enemy.h"
 #include "Text.h"
+#include "Ship.h"
+#include "Asteroid.h"
 
 class GameLayer : public Layer
 {
