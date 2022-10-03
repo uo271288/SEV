@@ -9,6 +9,7 @@
 #include "Text.h"
 #include "Ship.h"
 #include "Asteroid.h"
+#include "Coin.h"
 
 class GameLayer : public Layer
 {
@@ -30,10 +31,12 @@ public:
 
 	std::list<Enemy*> enemies;
 	std::list<Projectile*> projectiles;
+	std::list<Coin*> coins;
 
 	bool controlShoot = false;
 	int controlMoveX = 0;
 	int controlMoveY = 0;
 
 	int newEnemyTime = 0;
+	int coinTime = 500;
 };

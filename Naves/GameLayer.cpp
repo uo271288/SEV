@@ -14,6 +14,7 @@ void GameLayer::init()
 
 	enemies.clear();
 	projectiles.clear();
+	coins.clear();
 
 	points = 0;
 	textPoints = new Text("0", WIDTH * .92f, HEIGHT * .04f);
@@ -52,6 +53,14 @@ void GameLayer::update()
 		newEnemyTime = 110;
 	}
 
+	coinTime--;
+	if (coinTime <= 0) {
+		int rX = (rand() % (300) + 50);
+		int rY = (rand() % (320) + 50);
+		coins.push_back(new Coin(rX, rY));
+		coinTime = 500;
+	}
+
 	player->update();
 
 	for (auto const& enemy : enemies) {
@@ -71,6 +80,7 @@ void GameLayer::update()
 
 	std::unordered_set<Enemy*> deleteEnemies;
 	std::unordered_set<Projectile*> deleteProjectiles;
+	std::unordered_set<Coin*> deleteCoins;
 
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
@@ -84,6 +94,14 @@ void GameLayer::update()
 		}
 	}
 
+	for (auto const& coin : coins) {
+		if (player->isOverlapping(coin)) {
+			deleteCoins.emplace(coin);
+			points++;
+			textPoints->content = std::to_string(points);
+		}
+	}
+
 	for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
 	}
@@ -94,6 +112,10 @@ void GameLayer::update()
 	}
 	deleteProjectiles.clear();
 
+	for (auto const& delCoin : deleteCoins) {
+		coins.remove(delCoin);
+	}
+	deleteCoins.clear();
 }
 
 void GameLayer::draw()
@@ -105,6 +127,10 @@ void GameLayer::draw()
 
 	for (auto const& projectile : projectiles) {
 		projectile->draw();
+	}
+
+	for (auto const& coin : coins) {
+		coin->draw();
 	}
 
 	player->draw();
