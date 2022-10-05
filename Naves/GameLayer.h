@@ -10,6 +10,7 @@
 #include "Ship.h"
 #include "Asteroid.h"
 #include "Coin.h"
+#include "Bomb.h"
 
 class GameLayer : public Layer
 {
@@ -43,4 +44,7 @@ public:
 
 	int newEnemyTime = 0;
 	int coinTime = 500;
+	int bombTime = 1500;
+
+	Bomb* bomb;
 };

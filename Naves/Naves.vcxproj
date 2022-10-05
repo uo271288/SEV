@@ -159,6 +159,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Asteroid.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="Bomb.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />

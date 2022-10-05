@@ -1,5 +1,6 @@
 #include "GameLayer.h"
 #include "Game.h"
+#include "Bomb.h"
 
 #include <unordered_set>
 
@@ -15,6 +16,7 @@ void GameLayer::init()
 	enemies.clear();
 	projectiles.clear();
 	coins.clear();
+	bomb = nullptr;
 
 	points = 0;
 	textPoints = new Text("0", WIDTH * .92f, HEIGHT * .04f);
@@ -58,10 +60,18 @@ void GameLayer::update()
 
 	coinTime--;
 	if (coinTime <= 0) {
-		int rX = (rand() % (300) + 50);
-		int rY = (rand() % (320) + 50);
+		int rX = (rand() % 300 + 50);
+		int rY = (rand() % 320 + 50);
 		coins.push_back(new Coin(rX, rY));
 		coinTime = 500;
+	}
+
+	bombTime--;
+	if (bombTime <= 0) {
+		int rX = (rand() % (600 - 500)) + 1 + 500;
+		int rY = (rand() % (300 - 60)) + 1 + 60;
+		bomb = new Bomb(rX, rY);
+		bombTime = 1500;
 	}
 
 	player->update();
@@ -72,6 +82,10 @@ void GameLayer::update()
 
 	for (auto const& projectile : projectiles) {
 		projectile->update();
+	}
+
+	if (bomb != nullptr) {
+		bomb->update();
 	}
 
 	std::unordered_set<Enemy*> deleteEnemies;
@@ -111,6 +125,15 @@ void GameLayer::update()
 		}
 	}
 
+	if (bomb != nullptr && player->isOverlapping(bomb)) {
+		bomb = nullptr;
+		for (auto const& enemy : enemies) {
+			deleteEnemies.emplace(enemy);
+			points++;
+			textPoints->content = std::to_string(points);
+		}
+	}
+
 	for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
 	}
@@ -142,6 +165,10 @@ void GameLayer::draw()
 		coin->draw();
 	}
 
+	if (bomb != nullptr) {
+		bomb->draw();
+	}
+
 	player->draw();
 
 	backgroundPoints->draw();
@@ -149,6 +176,7 @@ void GameLayer::draw()
 
 	backgroundLife->draw();
 	textLife->draw();
+
 	SDL_RenderPresent(Game::getRenderer());
 }
 
