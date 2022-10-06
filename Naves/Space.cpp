@@ -12,28 +12,6 @@ void Space::update() {
 		if (actor->vy > 20) {
 			actor->vy = 20;
 		}
-
-		actor->hasCollisionDown = false;
-
-		updateMoveRight(actor);
-		updateMoveLeft(actor);
-		updateMoveTop(actor);
-		updateMoveDown(actor);
+		actor->sweep(staticActors);
 	}
-}
-
-void Space::updateMoveRight(Actor* dynamicActor) {
-
-}
-
-void Space::updateMoveLeft(Actor* dynamicActor) {
-
-}
-
-void Space::updateMoveTop(Actor* dynamicActor) {
-
-}
-
-void Space::updateMoveDown(Actor* dynamicActor) {
-
 }

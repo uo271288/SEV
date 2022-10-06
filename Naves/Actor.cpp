@@ -2,7 +2,8 @@
 #include "Game.h"
 
 Actor::Actor(std::string filename, float x, float y, int width, int height)
-	:x(x), y(y), width(width), height(height), fileWidth(width), fileHeight(height)
+	:x(x), y(y), width(width), height(height), fileWidth(width), fileHeight(height), 
+	vx(0), vy(0), boundingBox(x, y, width, height)
 {
 
 	texture = Game::getTexture(filename);
@@ -12,7 +13,7 @@ void Actor::draw(int scrollX) {
 	SDL_Rect source{
 	source.x = 0,
 	source.y = 0,
-	source.w = fileWidth, 
+	source.w = fileWidth,
 	source.h = fileHeight };
 
 	SDL_Rect destination;
@@ -25,12 +26,15 @@ void Actor::draw(int scrollX) {
 }
 
 bool Actor::isOverlapping(Actor* actor) {
-	if (actor->x - actor->width / 2 <= x + width / 2
-		&& actor->x + actor->width / 2 >= x - width / 2
-		&& actor->y + actor->height / 2 >= y - height / 2
-		&& actor->y - actor->height / 2 <= y + height / 2)
-	{
-		return true;
-	}
-	return false;
+	return boundingBox.overlaps(actor->boundingBox);
+}
+
+void Actor::sweep(std::unordered_set <Actor*>& actors) {
+	Vector2d delta{ vx,vy };
+
+	delta = boundingBox.sweep(actors, delta);
+	vx = delta.x;
+	vy = delta.y;
+	x += vx;
+	y += vy;
 }

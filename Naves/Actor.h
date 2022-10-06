@@ -3,6 +3,8 @@
 #include <SDL_image.h>
 #include <string>
 
+#include "BoundingBox.h"
+
 enum class Orientation {
 	Right, Left
 };
@@ -20,9 +22,12 @@ public:
 
 	bool isOverlapping(Actor* actor);
 
-	float x, y, vx = 0, vy = 0;
+	float x, y;
+	int vx, vy;
 	int width, height, fileWidth, fileHeight;
 	SDL_Texture* texture;
 
-	bool hasCollisionDown;
+	void sweep(std::unordered_set <Actor*>& actors);
+
+	BoundingBox boundingBox;
 };

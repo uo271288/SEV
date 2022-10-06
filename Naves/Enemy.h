@@ -15,4 +15,6 @@ public:
 	Animation* animation;
 
 	State state = State::Moving;
+
+	int vxIntelligence;
 };

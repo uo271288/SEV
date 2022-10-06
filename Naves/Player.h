@@ -14,6 +14,7 @@ public:
 	void draw(int scrollX) override;
 	void moveX(float direction);
 	void moveY(float direction);
+	void jump();
 
 	int shootCadence = 30;
 	int shootTime = 0;

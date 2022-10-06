@@ -39,12 +39,23 @@ void GameLayer::processControls()
 	}
 
 	player->moveX(controlMoveX);
-	player->moveY(controlMoveY);
+	if (controlMoveY < 0) {
+		player->jump();
+	}
 }
 
 void GameLayer::update()
 {
+	std::unordered_set<Enemy*> deleteEnemies;
+	std::unordered_set<Projectile*> deleteProjectiles;
+
+	space->update();
 	player->update();
+
+	if (player->y > HEIGHT + 80) {
+		init();
+	}
+
 	calculateScroll();
 
 	for (auto const& enemy : enemies) {
@@ -53,6 +64,9 @@ void GameLayer::update()
 
 	for (auto const& projectile : projectiles) {
 		projectile->update();
+		if (projectile->vx == 0) {
+			deleteProjectiles.emplace(projectile);
+		}
 	}
 
 	for (auto const& enemy : enemies) {
@@ -61,9 +75,6 @@ void GameLayer::update()
 			return;
 		}
 	}
-
-	std::unordered_set<Enemy*> deleteEnemies;
-	std::unordered_set<Projectile*> deleteProjectiles;
 
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
@@ -199,6 +210,7 @@ void GameLayer::loadMapObject(char character, int x, int y) {
 	case 'E': {
 		Enemy* enemy = new Enemy(x, y);
 		enemy->y -= enemy->height / 2;
+		enemy->boundingBox.update(enemy->x, enemy->y);
 		enemies.emplace_back(enemy);
 		space->addDynamicActor(enemy);
 		break;
@@ -206,11 +218,13 @@ void GameLayer::loadMapObject(char character, int x, int y) {
 	case '1':
 		player = new Player(x, y);
 		player->y -= player->height / 2;
+		player->boundingBox.update(player->x, player->y);
 		space->addDynamicActor(player);
 		break;
 	case '#': {
 		Tile* tile = new Tile("res/bloque_tierra.png", x, y);
 		tile->y -= tile->height / 2;
+		tile->boundingBox.update(tile->x, tile->y);
 		tiles.emplace_back(tile);
 		space->addStaticActor(tile);
 		break;

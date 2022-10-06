@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(float x, float y) :Actor("res/jugador.png", x, y, 35, 35)
+Player::Player(float x, float y) :Actor("res/jugador.png", x, y, 50, 58)
 {
 	aIdleRight = new Animation("res/jugador_idle_derecha.png", width, height, 320, 40, 6, 8);
 
@@ -77,4 +77,10 @@ void Player::moveY(float direction) {
 
 void Player::draw(int scrollX) {
 	animation->draw(x - scrollX, y);
+}
+
+void Player::jump() {
+	if (boundingBox.touchBottom) {
+		vy = -16;
+	}
 }
