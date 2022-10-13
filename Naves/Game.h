@@ -54,7 +54,7 @@ public:
 	void start();
 
 	bool loopActive = true;
-	Layer* gameLayer;
+	Layer* layer;
 
 	SDL_Window* window;
 	SDL_Renderer* renderer;

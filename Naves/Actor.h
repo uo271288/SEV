@@ -21,6 +21,9 @@ public:
 	virtual void draw(int scrollX = 0);
 
 	bool isOverlapping(Actor* actor);
+	bool containsPoint(int pointX, int pointY);
+	
+	bool clicked = false;
 
 	float x, y;
 	int vx, vy;

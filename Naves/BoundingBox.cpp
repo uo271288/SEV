@@ -64,3 +64,11 @@ Vector2d BoundingBox::sweep(std::unordered_set<class Actor*> actors, Vector2d& d
 
 	return { x - oldX,y - oldY };
 }
+
+bool BoundingBox::contains(int x, int y)
+{
+	return left <= x 
+		&& right >= x 
+		&& top <= y 
+		&& bottom >= y;
+}

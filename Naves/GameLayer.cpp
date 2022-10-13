@@ -4,13 +4,20 @@
 #include <unordered_set>
 #include <fstream>
 
-GameLayer::GameLayer() {
+GameLayer::GameLayer()
+	: Layer()
+{
 	init();
 }
 
-void GameLayer::init() {
+void GameLayer::init()
+{
 	space = new Space(1);
 	background = new Background("res/fondo_2.png", WIDTH * 0.5, HEIGHT * 0.5);
+
+	pad = new Pad(WIDTH * .15f, HEIGHT * .8f);
+	buttonJump = new Actor("res/boton_salto.png", WIDTH * .9f, HEIGHT * .55f, 100, 100);
+	buttonShoot = new Actor("res/boton_disparo.png", WIDTH * .75f, HEIGHT * .83f, 100, 100);
 
 	tiles.clear();
 	enemies.clear();
@@ -25,12 +32,10 @@ void GameLayer::init() {
 
 void GameLayer::processControls()
 {
-	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
-		keysToControls(event);
-	}
+	Layer::processControls();
 
-	if (controlShoot) {
+	if (controlShoot)
+	{
 		Projectile* newProjectile = player->shoot();
 		if (newProjectile) {
 			projectiles.push_back(newProjectile);
@@ -39,7 +44,8 @@ void GameLayer::processControls()
 	}
 
 	player->moveX(controlMoveX);
-	if (controlMoveY < 0) {
+	if (controlMoveY < 0)
+	{
 		player->jump();
 	}
 }
@@ -52,33 +58,42 @@ void GameLayer::update()
 	space->update();
 	player->update();
 
-	if (player->y > HEIGHT + 80) {
+	if (player->y > HEIGHT + 80)
+	{
 		init();
 	}
 
 	calculateScroll();
 
-	for (auto const& enemy : enemies) {
+	for (auto const& enemy : enemies)
+	{
 		enemy->update();
 	}
 
-	for (auto const& projectile : projectiles) {
+	for (auto const& projectile : projectiles)
+	{
 		projectile->update();
-		if (projectile->vx == 0) {
+		if (projectile->vx == 0)
+		{
 			deleteProjectiles.emplace(projectile);
 		}
 	}
 
-	for (auto const& enemy : enemies) {
-		if (player->isOverlapping(enemy)) {
+	for (auto const& enemy : enemies)
+	{
+		if (player->isOverlapping(enemy))
+		{
 			init();
 			return;
 		}
 	}
 
-	for (auto const& enemy : enemies) {
-		for (auto const& projectile : projectiles) {
-			if (enemy->isOverlapping(projectile)) {
+	for (auto const& enemy : enemies)
+	{
+		for (auto const& projectile : projectiles)
+		{
+			if (enemy->isOverlapping(projectile))
+			{
 				deleteProjectiles.emplace(projectile);
 				enemy->impacted();
 				points++;
@@ -86,18 +101,22 @@ void GameLayer::update()
 			}
 		}
 	}
-	for (auto const& enemy : enemies) {
-		if (enemy->state == State::Dead) {
+	for (auto const& enemy : enemies)
+	{
+		if (enemy->state == State::Dead)
+		{
 			deleteEnemies.emplace(enemy);
 		}
 	}
-	for (auto const& delEnemy : deleteEnemies) {
+	for (auto const& delEnemy : deleteEnemies)
+	{
 		enemies.remove(delEnemy);
 		space->removeDynamicActor(delEnemy);
 	}
 	deleteEnemies.clear();
 
-	for (auto const& delProjectile : deleteProjectiles) {
+	for (auto const& delProjectile : deleteProjectiles)
+	{
 		projectiles.remove(delProjectile);
 		space->removeDynamicActor(delProjectile);
 	}
@@ -108,15 +127,18 @@ void GameLayer::update()
 void GameLayer::draw()
 {
 	background->draw();
-	for (auto const& tile : tiles) {
+	for (auto const& tile : tiles)
+	{
 		tile->draw(scrollX);
 	}
 
-	for (auto const& enemy : enemies) {
+	for (auto const& enemy : enemies)
+	{
 		enemy->draw(scrollX);
 	}
 
-	for (auto const& projectile : projectiles) {
+	for (auto const& projectile : projectiles)
+	{
 		projectile->draw(scrollX);
 	}
 
@@ -125,20 +147,25 @@ void GameLayer::draw()
 	backgroundPoints->draw();
 	textPoints->draw();
 
+	if (inputType == InputType::Mouse) {
+		pad->draw();
+		buttonJump->draw();
+		buttonShoot->draw();
+	}
+
 	SDL_RenderPresent(Game::getRenderer());
 }
 
-void GameLayer::keysToControls(SDL_Event event) {
-	if (event.type == SDL_KEYDOWN) {
+void GameLayer::keysToControls(SDL_Event event)
+{
+	Layer::keysToControls(event);
+
+	if (event.type == SDL_KEYDOWN)
+	{
 		int code = event.key.keysym.sym;
 		// Pulsada
-		switch (code) {
-		case SDLK_ESCAPE:
-			Game::getInstance().loopActive = false;
-			break;
-		case SDLK_1:
-			Game::getInstance().scale();
-			break;
+		switch (code)
+		{
 		case SDLK_d: // derecha
 			controlMoveX = 1;
 			break;
@@ -156,12 +183,14 @@ void GameLayer::keysToControls(SDL_Event event) {
 			break;
 		}
 	}
-	if (event.type == SDL_KEYUP) {
+	if (event.type == SDL_KEYUP)
+	{
 		int code = event.key.keysym.sym;
 		// Levantada
 		switch (code) {
 		case SDLK_d: // derecha
-			if (controlMoveX == 1) {
+			if (controlMoveX == 1)
+			{
 				controlMoveX = 0;
 			}
 			break;
@@ -185,6 +214,85 @@ void GameLayer::keysToControls(SDL_Event event) {
 			break;
 		}
 	}
+}
+
+void GameLayer::mouseToControls(SDL_Event event)
+{
+	Layer::mouseToControls(event);
+
+	float motionX = event.motion.x / Game::getInstance().scaleLower;
+	float motionY = event.motion.y / Game::getInstance().scaleLower;
+
+	if (event.type == SDL_MOUSEBUTTONDOWN)
+	{
+		if (pad->containsPoint(motionX, motionY))
+		{
+			pad->clicked = true;
+			controlMoveX = pad->getOrientation(motionX);
+		}
+
+		if (buttonShoot->containsPoint(motionX, motionY))
+		{
+			controlShoot = true;
+		}
+
+		if (buttonJump->containsPoint(motionX, motionY))
+		{
+			controlMoveY = -1;
+		}
+	}
+
+	if (event.type == SDL_MOUSEMOTION)
+	{
+		if (pad->clicked && pad->containsPoint(motionX, motionY))
+		{
+			controlMoveX = pad->containsPoint(motionX, motionY);
+
+			if (controlMoveX > -20 && controlMoveX < 20)
+			{
+				controlMoveX = 0;
+			}
+		}
+		else
+		{
+			pad->clicked = false;
+			controlMoveX = 0;
+		}
+
+		if (!buttonShoot->containsPoint(motionX, motionY))
+		{
+			controlShoot = false;
+		}
+
+		if (!pad->containsPoint(motionX, motionY))
+		{
+			controlMoveY = 0;
+		}
+	}
+
+	if (event.type == SDL_MOUSEBUTTONUP)
+	{
+		if (pad->containsPoint(motionX, motionY))
+		{
+			pad->clicked = false;
+			controlMoveX = 0;
+		}
+
+		if (buttonShoot->containsPoint(motionX, motionY))
+		{
+			controlShoot = false;
+		}
+
+		if (pad->containsPoint(motionX, motionY))
+		{
+			controlMoveY = 0;
+		}
+	}
+}
+
+void GameLayer::gamepadToControls(SDL_Event event)
+{
+	Layer::gamepadToControls(event);
 }
 
 void GameLayer::loadMap(std::string name) {

@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "GameLayer.h"
+#include "MenuLayer.h"
 
 constexpr int FRAME_TIME = 1000 / 30;
 
@@ -25,9 +25,9 @@ void Game::loop() {
 	while (loopActive) {
 		initTick = SDL_GetTicks();
 
-		gameLayer->processControls();
-		gameLayer->update();
-		gameLayer->draw();
+		layer->processControls();
+		layer->update();
+		layer->draw();
 
 		endTick = SDL_GetTicks();
 		deltaTick = endTick - initTick;
@@ -39,7 +39,7 @@ void Game::loop() {
 }
 
 void Game::start() {
-	gameLayer = new GameLayer();
+	layer = new MenuLayer();
 
 	loopActive = true; // bucle activo
 	loop();

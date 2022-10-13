@@ -14,6 +14,8 @@ public:
 	bool overlaps(BoundingBox& other);
 	Vector2d sweep(std::unordered_set<class Actor*> actors, Vector2d& delta);
 
+	bool contains(int x, int y);
+
 	int width, height;
 	int left, right, top, bottom;
 	bool touchLeft, touchRight, touchTop, touchBottom;

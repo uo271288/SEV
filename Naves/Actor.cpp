@@ -2,7 +2,7 @@
 #include "Game.h"
 
 Actor::Actor(std::string filename, float x, float y, int width, int height)
-	:x(x), y(y), width(width), height(height), fileWidth(width), fileHeight(height), 
+	:x(x), y(y), width(width), height(height), fileWidth(width), fileHeight(height),
 	vx(0), vy(0), boundingBox(x, y, width, height)
 {
 
@@ -27,6 +27,11 @@ void Actor::draw(int scrollX) {
 
 bool Actor::isOverlapping(Actor* actor) {
 	return boundingBox.overlaps(actor->boundingBox);
+}
+
+bool Actor::containsPoint(int pointX, int pointY) 
+{
+	return boundingBox.contains(pointX, pointY);
 }
 
 void Actor::sweep(std::unordered_set <Actor*>& actors) {
