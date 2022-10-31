@@ -188,7 +188,7 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_ESCAPE:
 			Game::getInstance().loopActive = false;
 			break;
-		case SDLK_1:
+		case SDLK_TAB:
 			Game::getInstance().scale();
 			break;
 		case SDLK_d: // derecha
@@ -205,6 +205,12 @@ void GameLayer::keysToControls(SDL_Event event) {
 			break;
 		case SDLK_SPACE: // dispara
 			controlShoot = true;
+			break;
+		case SDLK_1: 
+			player->changeShip(1);
+			break;
+		case SDLK_2:
+			player->changeShip(2);
 			break;
 		}
 	}

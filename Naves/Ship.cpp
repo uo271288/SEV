@@ -9,5 +9,4 @@ Ship::Ship(std::string filename, float x, float y, int width, int height)
 
 void Ship::update() {
 	animation->update();
-	x += vx;
 }

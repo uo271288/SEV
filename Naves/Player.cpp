@@ -21,10 +21,24 @@ void Player::update() {
 	y = y + vy;
 }
 
+void Player::changeShip(int ship) {
+	if (ship == 1) {
+		shootCadence = 30;
+		speed = 3.;
+		texture = Game::getTexture("res/jugador.png");
+	}
+
+	if (ship == 2) {
+		shootCadence = 15;
+		speed = 1.5;
+		texture = Game::getTexture("res/jugador2.png");
+	}
+}
+
 void Player::moveX(float direction) {
-	vx = direction * 3;
+	vx = direction * speed;
 }
 
 void Player::moveY(float direction) {
-	vy = direction * 3;
+	vy = direction * speed;
 }
