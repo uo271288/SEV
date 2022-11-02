@@ -1,8 +1,8 @@
 #pragma once
-#include "Layer.h"
 
 #include <list>
 
+#include "Layer.h"
 #include "Player.h"
 #include "Background.h"
 #include "Enemy.h"
@@ -10,6 +10,7 @@
 #include "Tile.h"
 #include "Space.h"
 #include "Pad.h"
+#include "Item.h"
 
 class GameLayer : public Layer
 {
@@ -35,6 +36,10 @@ public:
 	int points;
 	Text* textPoints;
 
+	Actor* backgroundItems;
+	int itemCounter;
+	Text* textItems;
+
 	Pad* pad;
 	Actor* buttonJump;
 	Actor* buttonShoot;
@@ -42,6 +47,7 @@ public:
 	std::list<Tile*> tiles;
 	std::list<Enemy*> enemies;
 	std::list<Projectile*> projectiles;
+	std::list<Item*> items;
 
 	bool controlShoot = false;
 	int controlMoveX = 0;

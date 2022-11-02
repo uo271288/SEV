@@ -22,10 +22,15 @@ void GameLayer::init()
 	tiles.clear();
 	enemies.clear();
 	projectiles.clear();
+	items.clear();
 
 	points = 0;
 	textPoints = new Text("0", WIDTH * .92f, HEIGHT * .04f);
 	backgroundPoints = new Actor("res/icono_puntos.png", WIDTH * .85f, HEIGHT * .05f, 24, 24);
+
+	itemCounter = 0;
+	textItems = new Text("0", WIDTH * .80f, HEIGHT * .04f);
+	backgroundItems = new Actor("res/icono_recolectable.png", WIDTH * .72f, HEIGHT * .06f, 40, 40);
 
 	loadMap("res/1.txt");
 }
@@ -54,6 +59,7 @@ void GameLayer::update()
 {
 	std::unordered_set<Enemy*> deleteEnemies;
 	std::unordered_set<Projectile*> deleteProjectiles;
+	std::unordered_set<Item*> deleteItems;
 
 	space->update();
 	player->update();
@@ -68,6 +74,11 @@ void GameLayer::update()
 	for (auto const& enemy : enemies)
 	{
 		enemy->update();
+	}
+
+	for (auto const& item : items)
+	{
+		item->update();
 	}
 
 	for (auto const& projectile : projectiles)
@@ -85,6 +96,15 @@ void GameLayer::update()
 		{
 			init();
 			return;
+		}
+	}
+
+	for (auto const& item : items)
+	{
+		if (player->isOverlapping(item))
+		{
+			deleteItems.emplace(item);
+			textItems->content = std::to_string(++itemCounter);
 		}
 	}
 
@@ -122,6 +142,13 @@ void GameLayer::update()
 	}
 	deleteProjectiles.clear();
 
+	for (auto const& delItem : deleteItems)
+	{
+		items.remove(delItem);
+		space->removeDynamicActor(delItem);
+	}
+	deleteItems.clear();
+
 }
 
 void GameLayer::draw()
@@ -142,10 +169,18 @@ void GameLayer::draw()
 		projectile->draw(scrollX);
 	}
 
+	for (auto const& item : items)
+	{
+		item->draw(scrollX);
+	}
+
 	player->draw(scrollX);
 
 	backgroundPoints->draw();
 	textPoints->draw();
+
+	backgroundItems->draw();
+	textItems->draw();
 
 	if (inputType == InputType::Mouse) {
 		pad->draw();
@@ -335,6 +370,14 @@ void GameLayer::loadMapObject(char character, int x, int y) {
 		tile->boundingBox.update(tile->x, tile->y);
 		tiles.emplace_back(tile);
 		space->addStaticActor(tile);
+		break;
+	}
+	case 'I': {
+		Item* item = new Item(x, y);
+		item->y -= item->height / 2;
+		item->boundingBox.update(item->x, item->y);
+		items.emplace_back(item);
+		space->addDynamicActor(item);
 		break;
 	}
 	}
