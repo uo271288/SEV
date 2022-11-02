@@ -12,7 +12,7 @@ GameLayer::GameLayer()
 
 void GameLayer::init()
 {
-	space = new Space(1);
+	space = new Space(GRAVITY);
 	background = new Background("res/fondo_2.png", WIDTH * 0.5, HEIGHT * 0.5);
 
 	pad = new Pad(WIDTH * .15f, HEIGHT * .8f);
@@ -373,7 +373,7 @@ void GameLayer::loadMapObject(char character, int x, int y) {
 		break;
 	}
 	case 'I': {
-		Item* item = new Item(x, y);
+		Item* item = new Item(x, y, GRAVITY);
 		item->y -= item->height / 2;
 		item->boundingBox.update(item->x, item->y);
 		items.emplace_back(item);
