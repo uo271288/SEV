@@ -11,6 +11,7 @@
 #include "Space.h"
 #include "Pad.h"
 #include "Item.h"
+#include "SquashedEnemy.h"
 
 class GameLayer : public Layer
 {
@@ -46,6 +47,7 @@ public:
 
 	std::list<Tile*> tiles;
 	std::list<Enemy*> enemies;
+	std::list<SquashedEnemy*> squashedEnemies;
 	std::list<Projectile*> projectiles;
 	std::list<Item*> items;
 

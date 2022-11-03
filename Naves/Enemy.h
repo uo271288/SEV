@@ -5,7 +5,7 @@
 class Enemy : public Actor
 {
 public:
-	Enemy(float x, float y);
+	Enemy(std::string idle, std::string movement, std::string die, float x, float y);
 	void update();
 	void draw(int scrollX) override;
 	void impacted();

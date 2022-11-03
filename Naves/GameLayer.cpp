@@ -21,6 +21,7 @@ void GameLayer::init()
 
 	tiles.clear();
 	enemies.clear();
+	squashedEnemies.clear();
 	projectiles.clear();
 	items.clear();
 
@@ -60,6 +61,7 @@ void GameLayer::update()
 	std::unordered_set<Enemy*> deleteEnemies;
 	std::unordered_set<Projectile*> deleteProjectiles;
 	std::unordered_set<Item*> deleteItems;
+	std::unordered_set<SquashedEnemy*> deleteSquashedEnemies;
 
 	space->update();
 	player->update();
@@ -72,6 +74,11 @@ void GameLayer::update()
 	calculateScroll();
 
 	for (auto const& enemy : enemies)
+	{
+		enemy->update();
+	}
+
+	for (auto const& enemy : squashedEnemies)
 	{
 		enemy->update();
 	}
@@ -93,6 +100,21 @@ void GameLayer::update()
 	for (auto const& enemy : enemies)
 	{
 		if (player->isOverlapping(enemy))
+		{
+			init();
+			return;
+		}
+	}
+
+	for (auto const& enemy : squashedEnemies)
+	{
+		if (enemy->isUp(player) && (enemy->state != State::Dying))
+		{
+			enemy->impacted();
+			points++;
+			textPoints->content = std::to_string(points);
+		}
+		if (player->isOverlapping(enemy) && (enemy->state != State::Dying))
 		{
 			init();
 			return;
@@ -128,6 +150,21 @@ void GameLayer::update()
 			deleteEnemies.emplace(enemy);
 		}
 	}
+	for (auto const& enemy : squashedEnemies)
+	{
+		if (enemy->state == State::Dead)
+		{
+			deleteSquashedEnemies.emplace(enemy);
+		}
+	}
+
+	for (auto const& delEnemy : deleteSquashedEnemies)
+	{
+		squashedEnemies.remove(delEnemy);
+		space->removeDynamicActor(delEnemy);
+	}
+	deleteSquashedEnemies.clear();
+
 	for (auto const& delEnemy : deleteEnemies)
 	{
 		enemies.remove(delEnemy);
@@ -160,6 +197,11 @@ void GameLayer::draw()
 	}
 
 	for (auto const& enemy : enemies)
+	{
+		enemy->draw(scrollX);
+	}
+
+	for (auto const& enemy : squashedEnemies)
 	{
 		enemy->draw(scrollX);
 	}
@@ -351,10 +393,18 @@ void GameLayer::loadMap(std::string name) {
 void GameLayer::loadMapObject(char character, int x, int y) {
 	switch (character) {
 	case 'E': {
-		Enemy* enemy = new Enemy(x, y);
+		Enemy* enemy = new Enemy("res/enemigo.png", "res/enemigo_movimiento.png", "res/enemigo_morir.png", x, y);
 		enemy->y -= enemy->height / 2;
 		enemy->boundingBox.update(enemy->x, enemy->y);
 		enemies.emplace_back(enemy);
+		space->addDynamicActor(enemy);
+		break;
+	}
+	case 'S': {
+		SquashedEnemy* enemy = new SquashedEnemy("res/enemigo2.png", "res/enemigo2_movimiento.png", "res/enemigo2_morir.png", x, y);
+		enemy->y -= enemy->height / 2;
+		enemy->boundingBox.update(enemy->x, enemy->y);
+		squashedEnemies.emplace_back(enemy);
 		space->addDynamicActor(enemy);
 		break;
 	}

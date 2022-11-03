@@ -1,8 +1,8 @@
 #include "Enemy.h"
 
-Enemy::Enemy(float x, float y) :Actor("res/enemigo.png", x, y, 36, 40) {
-	aMoving = new Animation("res/enemigo_movimiento.png", width, height, 108, 40, 6, 3);
-	aDying = new Animation("res/enemigo_morir.png", width, height, 280, 40, 6, 8, false);
+Enemy::Enemy(std::string idle, std::string movement, std::string die, float x, float y) :Actor(idle, x, y, 36, 40) {
+	aMoving = new Animation(movement, width, height, 108, 40, 6, 3);
+	aDying = new Animation(die, width, height, 280, 40, 6, 8, false);
 	animation = aMoving;
 	vx = -1;
 	vxIntelligence = -1;
