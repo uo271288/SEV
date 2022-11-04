@@ -143,7 +143,7 @@ void GameLayer::update()
 				textPoints->content = std::to_string(points);
 			}
 		}
-		if (enemy->y > HEIGHT + 80) {
+		if (enemy->y > HEIGHT + 80 && enemy->state==State::Moving) {
 			enemy->state = State::Dead;
 			points++;
 			textPoints->content = std::to_string(points);
