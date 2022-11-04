@@ -68,7 +68,7 @@ void GameLayer::update()
 
 	if (player->y > HEIGHT + 80)
 	{
-		init();
+		Game::getInstance().layer = new LoseLayer();
 	}
 
 	calculateScroll();
@@ -101,7 +101,7 @@ void GameLayer::update()
 	{
 		if (player->isOverlapping(enemy) && enemy->state == State::Moving)
 		{
-			init();
+			Game::getInstance().layer = new LoseLayer();
 			return;
 		}
 	}
@@ -116,7 +116,7 @@ void GameLayer::update()
 		}
 		if (player->isOverlapping(enemy) && enemy->state == State::Moving)
 		{
-			init();
+			Game::getInstance().layer = new LoseLayer();
 			return;
 		}
 	}
@@ -459,6 +459,5 @@ void GameLayer::calculateScroll() {
 		if (player->y - scrollY > HEIGHT * .6f) {
 			scrollY = player->y - HEIGHT * .6f;
 		}
-
 	}
 }

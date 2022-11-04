@@ -13,6 +13,7 @@
 #include "Item.h"
 #include "SquashedEnemy.h"
 #include "WinLayer.h"
+#include "LoseLayer.h"
 
 class GameLayer : public Layer
 {
