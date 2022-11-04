@@ -31,7 +31,15 @@ void WinLayer::keysToControls(SDL_Event event)
 
 void WinLayer::mouseToControls(SDL_Event event)
 {
+	Layer::mouseToControls(event);
 
+	float motionX = event.motion.x / Game::getInstance().scaleLower;
+	float motionY = event.motion.y / Game::getInstance().scaleLower;
+
+	if (event.type == SDL_MOUSEBUTTONDOWN)
+	{
+		controlContinue = true;
+	}
 }
 
 void WinLayer::gamepadToControls(SDL_Event event)
