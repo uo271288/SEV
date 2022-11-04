@@ -142,6 +142,11 @@ void GameLayer::update()
 				textPoints->content = std::to_string(points);
 			}
 		}
+		if (enemy->y > HEIGHT + 80) {
+			enemy->state = State::Dead;
+			points++;
+			textPoints->content = std::to_string(points);
+		}
 	}
 	for (auto const& enemy : enemies)
 	{
