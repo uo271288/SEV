@@ -186,6 +186,9 @@ void GameLayer::update()
 	}
 	deleteItems.clear();
 
+	if (enemies.empty() && squashedEnemies.empty()) {
+		Game::getInstance().layer = new WinLayer();
+	}
 }
 
 void GameLayer::draw()

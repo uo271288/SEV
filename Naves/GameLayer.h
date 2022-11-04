@@ -12,6 +12,7 @@
 #include "Pad.h"
 #include "Item.h"
 #include "SquashedEnemy.h"
+#include "WinLayer.h"
 
 class GameLayer : public Layer
 {
