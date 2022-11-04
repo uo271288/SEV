@@ -14,6 +14,7 @@
 #include "SquashedEnemy.h"
 #include "WinLayer.h"
 #include "LoseLayer.h"
+#include "PauseLayer.h"
 
 class GameLayer : public Layer
 {
@@ -46,6 +47,7 @@ public:
 	Pad* pad;
 	Actor* buttonJump;
 	Actor* buttonShoot;
+	Actor* buttonPause;
 
 	std::list<Tile*> tiles;
 	std::list<Enemy*> enemies;

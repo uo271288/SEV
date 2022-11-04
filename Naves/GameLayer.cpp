@@ -18,6 +18,7 @@ void GameLayer::init()
 	pad = new Pad(WIDTH * .15f, HEIGHT * .8f);
 	buttonJump = new Actor("res/boton_salto.png", WIDTH * .9f, HEIGHT * .55f, 100, 100);
 	buttonShoot = new Actor("res/boton_disparo.png", WIDTH * .75f, HEIGHT * .83f, 100, 100);
+	buttonPause = new Actor("res/boton_pausa.png", WIDTH * .1f, HEIGHT * .1f, 40, 40);
 
 	tiles.clear();
 	enemies.clear();
@@ -236,6 +237,7 @@ void GameLayer::draw()
 		pad->draw();
 		buttonJump->draw();
 		buttonShoot->draw();
+		buttonPause->draw();
 	}
 
 	SDL_RenderPresent(Game::getRenderer());
@@ -265,6 +267,9 @@ void GameLayer::keysToControls(SDL_Event event)
 			break;
 		case SDLK_SPACE: // dispara
 			controlShoot = true;
+			break;
+		case SDLK_TAB:
+			Game::getInstance().layer = new PauseLayer(this);
 			break;
 		}
 	}
@@ -324,6 +329,11 @@ void GameLayer::mouseToControls(SDL_Event event)
 		if (buttonJump->containsPoint(motionX, motionY))
 		{
 			controlMoveY = -1;
+		}
+
+		if (buttonPause->containsPoint(motionX, motionY))
+		{
+			Game::getInstance().layer = new PauseLayer(this);
 		}
 	}
 
