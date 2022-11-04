@@ -99,7 +99,7 @@ void GameLayer::update()
 
 	for (auto const& enemy : enemies)
 	{
-		if (player->isOverlapping(enemy))
+		if (player->isOverlapping(enemy) && enemy->state == State::Moving)
 		{
 			init();
 			return;
@@ -108,13 +108,13 @@ void GameLayer::update()
 
 	for (auto const& enemy : squashedEnemies)
 	{
-		if (enemy->isUp(player) && (enemy->state != State::Dying))
+		if (enemy->isUp(player) && enemy->state == State::Moving)
 		{
 			enemy->impacted();
 			points++;
 			textPoints->content = std::to_string(points);
 		}
-		if (player->isOverlapping(enemy) && (enemy->state != State::Dying))
+		if (player->isOverlapping(enemy) && enemy->state == State::Moving)
 		{
 			init();
 			return;
@@ -134,7 +134,7 @@ void GameLayer::update()
 	{
 		for (auto const& projectile : projectiles)
 		{
-			if (enemy->isOverlapping(projectile))
+			if (enemy->isOverlapping(projectile) && enemy->state == State::Moving)
 			{
 				deleteProjectiles.emplace(projectile);
 				enemy->impacted();
