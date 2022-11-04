@@ -9,7 +9,7 @@ Actor::Actor(std::string filename, float x, float y, int width, int height)
 	texture = Game::getTexture(filename);
 }
 
-void Actor::draw(int scrollX) {
+void Actor::draw(int scrollX, int scrollY) {
 	SDL_Rect source{
 	source.x = 0,
 	source.y = 0,
@@ -18,7 +18,7 @@ void Actor::draw(int scrollX) {
 
 	SDL_Rect destination;
 	destination.x = x - width / 2 - scrollX;
-	destination.y = y - height / 2;
+	destination.y = y - height / 2 - scrollY;
 	destination.w = width;
 	destination.h = height;
 

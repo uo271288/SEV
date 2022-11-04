@@ -60,5 +60,7 @@ public:
 	Space* space;
 
 	float scrollX = 0;
+	float scrollY = 0;
 	int mapWidth = 0;
+	int mapHeight = 0;
 };

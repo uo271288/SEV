@@ -30,8 +30,8 @@ void Enemy::update() {
 	}
 }
 
-void Enemy::draw(int scrollX) {
-	animation->draw(x - scrollX, y);
+void Enemy::draw(int scrollX, int scrollY) {
+	animation->draw(x - scrollX, y - scrollY);
 }
 
 void Enemy::impacted() {

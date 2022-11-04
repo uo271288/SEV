@@ -193,30 +193,30 @@ void GameLayer::draw()
 	background->draw();
 	for (auto const& tile : tiles)
 	{
-		tile->draw(scrollX);
+		tile->draw(scrollX, scrollY);
 	}
 
 	for (auto const& enemy : enemies)
 	{
-		enemy->draw(scrollX);
+		enemy->draw(scrollX, scrollY);
 	}
 
 	for (auto const& enemy : squashedEnemies)
 	{
-		enemy->draw(scrollX);
+		enemy->draw(scrollX, scrollY);
 	}
 
 	for (auto const& projectile : projectiles)
 	{
-		projectile->draw(scrollX);
+		projectile->draw(scrollX, scrollY);
 	}
 
 	for (auto const& item : items)
 	{
-		item->draw(scrollX);
+		item->draw(scrollX, scrollY);
 	}
 
-	player->draw(scrollX);
+	player->draw(scrollX, scrollY);
 
 	backgroundPoints->draw();
 	textPoints->draw();
@@ -388,6 +388,7 @@ void GameLayer::loadMap(std::string name) {
 		std::cout << std::endl;
 		row++;
 	}
+	mapHeight = row;
 }
 
 void GameLayer::loadMapObject(char character, int x, int y) {
@@ -442,6 +443,18 @@ void GameLayer::calculateScroll() {
 		}
 		if (player->x - scrollX > WIDTH * .7f) {
 			scrollX = player->x - WIDTH * .7f;
+		}
+
+	}
+
+	if (player->y > HEIGHT * .4f
+		|| player->y < mapHeight - HEIGHT * .4f) {
+
+		if (player->y - scrollY < HEIGHT * .4f) {
+			scrollY = player->y - HEIGHT * .4f;
+		}
+		if (player->y - scrollY > HEIGHT * .6f) {
+			scrollY = player->y - HEIGHT * .6f;
 		}
 
 	}

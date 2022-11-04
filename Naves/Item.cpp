@@ -9,6 +9,6 @@ void Item::update() {
 	vy = -gravity;
 }
 
-void Item::draw(int scrollX) {
-	animation->draw(x - scrollX, y);
+void Item::draw(int scrollX, int scrollY) {
+	animation->draw(x - scrollX, y-scrollY);
 }

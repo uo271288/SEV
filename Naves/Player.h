@@ -11,7 +11,7 @@ public:
 	Projectile* shoot();
 
 	void update();
-	void draw(int scrollX) override;
+	void draw(int scrollX, int scrollY) override;
 	void moveX(float direction);
 	void moveY(float direction);
 	void jump();

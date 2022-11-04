@@ -7,7 +7,7 @@ class Enemy : public Actor
 public:
 	Enemy(std::string idle, std::string movement, std::string die, float x, float y);
 	void update();
-	void draw(int scrollX) override;
+	void draw(int scrollX, int scrollY) override;
 	void impacted();
 
 	Animation* aMoving;

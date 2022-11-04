@@ -75,8 +75,8 @@ void Player::moveY(float direction) {
 	vy = direction * 3;
 }
 
-void Player::draw(int scrollX) {
-	animation->draw(x - scrollX, y);
+void Player::draw(int scrollX, int scrollY) {
+	animation->draw(x - scrollX, y-scrollY);
 }
 
 void Player::jump() {
