@@ -26,7 +26,7 @@ public:
 	bool clicked = false;
 
 	float x, y;
-	int vx, vy;
+	float vx, vy;
 	int width, height, fileWidth, fileHeight;
 	SDL_Texture* texture;
 

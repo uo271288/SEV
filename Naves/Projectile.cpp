@@ -1,10 +1,17 @@
 #include "Projectile.h"
 
-Projectile::Projectile(float x, float y) :Actor("res/disparo_jugador.png", x, y, 18, 6) {
-	vx = 9;
+Projectile::Projectile(float x, float y) :Actor("res/fireball.png", x, y, 15, 15) {
+	vx = 10;
 	vy = -1;
+	bounce = 10;
 }
 
 void Projectile::update() {
-	vy = vy - 1;
+	if (boundingBox.touchBottom) {
+		y -= bounce;
+		bounce /= 1.5;
+		vx /= 1.1;
+		vy = -0.5;
+	}
+	boundingBox.update(x, y);
 }
