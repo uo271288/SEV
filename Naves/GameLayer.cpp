@@ -10,6 +10,12 @@ GameLayer::GameLayer()
 	init();
 }
 
+GameLayer::GameLayer(bool reachedCheckpoint, Checkpoint* checkpoint)
+	: Layer(), reachedCheckpoint(reachedCheckpoint), checkpoint(checkpoint)
+{
+	init();
+}
+
 void GameLayer::init()
 {
 	space = new Space(GRAVITY);
@@ -25,6 +31,7 @@ void GameLayer::init()
 	squashedEnemies.clear();
 	projectiles.clear();
 	items.clear();
+	checkpoints.clear();
 
 	points = 0;
 	textPoints = new Text("0", WIDTH * .92f, HEIGHT * .04f);
@@ -63,13 +70,14 @@ void GameLayer::update()
 	std::unordered_set<Projectile*> deleteProjectiles;
 	std::unordered_set<Item*> deleteItems;
 	std::unordered_set<SquashedEnemy*> deleteSquashedEnemies;
+	std::unordered_set<Checkpoint*> deleteCheckpoints;
 
 	space->update();
 	player->update();
 
 	if (player->y > HEIGHT + 80)
 	{
-		Game::getInstance().layer = new LoseLayer();
+		Game::getInstance().layer = new LoseLayer(reachedCheckpoint, checkpoint);
 	}
 
 	calculateScroll();
@@ -89,6 +97,11 @@ void GameLayer::update()
 		item->update();
 	}
 
+	for (auto const& checkpoint : checkpoints)
+	{
+		checkpoint->update();
+	}
+
 	for (auto const& projectile : projectiles)
 	{
 		projectile->update();
@@ -102,7 +115,7 @@ void GameLayer::update()
 	{
 		if (player->isOverlapping(enemy) && enemy->state == State::Moving)
 		{
-			Game::getInstance().layer = new LoseLayer();
+			Game::getInstance().layer = new LoseLayer(reachedCheckpoint, checkpoint);
 			return;
 		}
 	}
@@ -117,7 +130,7 @@ void GameLayer::update()
 		}
 		if (player->isOverlapping(enemy) && enemy->state == State::Moving)
 		{
-			Game::getInstance().layer = new LoseLayer();
+			Game::getInstance().layer = new LoseLayer(reachedCheckpoint, checkpoint);
 			return;
 		}
 	}
@@ -128,6 +141,16 @@ void GameLayer::update()
 		{
 			deleteItems.emplace(item);
 			textItems->content = std::to_string(++itemCounter);
+		}
+	}
+
+	for (auto const& checkpoint : checkpoints)
+	{
+		if (player->isOverlapping(checkpoint))
+		{
+			this->checkpoint = checkpoint;
+			reachedCheckpoint = true;
+			deleteCheckpoints.emplace(checkpoint);
 		}
 	}
 
@@ -143,7 +166,7 @@ void GameLayer::update()
 				textPoints->content = std::to_string(points);
 			}
 		}
-		if (enemy->y > HEIGHT + 80 && enemy->state==State::Moving) {
+		if (enemy->y > HEIGHT + 80 && enemy->state == State::Moving) {
 			enemy->state = State::Dead;
 			points++;
 			textPoints->content = std::to_string(points);
@@ -192,6 +215,13 @@ void GameLayer::update()
 	}
 	deleteItems.clear();
 
+	for (auto const& delCheckpoint : deleteCheckpoints)
+	{
+		checkpoints.remove(delCheckpoint);
+		space->removeDynamicActor(delCheckpoint);
+	}
+	deleteCheckpoints.clear();
+
 	if (enemies.empty() && squashedEnemies.empty()) {
 		Game::getInstance().layer = new WinLayer();
 	}
@@ -223,6 +253,11 @@ void GameLayer::draw()
 	for (auto const& item : items)
 	{
 		item->draw(scrollX, scrollY);
+	}
+
+	for (auto const& checkpoint : checkpoints)
+	{
+		checkpoint->draw(scrollX, scrollY);
 	}
 
 	player->draw(scrollX, scrollY);
@@ -428,7 +463,12 @@ void GameLayer::loadMapObject(char character, int x, int y) {
 		break;
 	}
 	case '1':
-		player = new Player(x, y);
+		if (reachedCheckpoint) {
+			player = new Player(checkpoint->x, checkpoint->y);
+		}
+		else {
+			player = new Player(x, y);
+		}
 		player->y -= player->height / 2;
 		player->boundingBox.update(player->x, player->y);
 		space->addDynamicActor(player);
@@ -447,6 +487,14 @@ void GameLayer::loadMapObject(char character, int x, int y) {
 		item->boundingBox.update(item->x, item->y);
 		items.emplace_back(item);
 		space->addDynamicActor(item);
+		break;
+	}
+	case 'A': {
+		Checkpoint* checkpoint = new Checkpoint(x, y);
+		checkpoint->y -= checkpoint->height / 2;
+		checkpoint->boundingBox.update(checkpoint->x, checkpoint->y);
+		checkpoints.emplace_back(checkpoint);
+		space->addDynamicActor(checkpoint);
 		break;
 	}
 	}

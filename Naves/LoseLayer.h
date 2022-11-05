@@ -2,12 +2,13 @@
 
 #include "Layer.h"
 #include "Background.h"
+#include "Checkpoint.h"
 
 class LoseLayer :
 	public Layer
 {
 public:
-	LoseLayer();
+	LoseLayer(bool reachedCheckpoint, Checkpoint* checkpoint);
 	void init() override;
 	void processControls() override;
 	void draw() override;
@@ -18,6 +19,8 @@ public:
 
 private:
 	bool controlContinue = false;
+	bool reachedCheckpoint;
+	Checkpoint* checkpoint;
 
 	Background* background;
 };

@@ -1,9 +1,9 @@
 #include "LoseLayer.h"
 #include "Game.h"
-#include "Menulayer.h"
+#include "Gamelayer.h"
 
-LoseLayer::LoseLayer()
-	: Layer()
+LoseLayer::LoseLayer(bool reachedCheckpoint, Checkpoint* checkpoint)
+	: Layer(), reachedCheckpoint(reachedCheckpoint), checkpoint(checkpoint)
 {
 	init();
 }
@@ -51,7 +51,7 @@ void LoseLayer::processControls() {
 	Layer::processControls();
 	if (controlContinue) {
 		controlContinue = false;
-		Game::getInstance().layer = new MenuLayer();
+		Game::getInstance().layer = new GameLayer(reachedCheckpoint, checkpoint);
 	}
 }
 void LoseLayer::draw() {

@@ -15,11 +15,13 @@
 #include "WinLayer.h"
 #include "LoseLayer.h"
 #include "PauseLayer.h"
+#include "Checkpoint.h"
 
 class GameLayer : public Layer
 {
 public:
 	GameLayer();
+	GameLayer(bool reachedCheckpoint, Checkpoint* checkpoint);
 
 	void init() override;
 	void processControls() override;
@@ -54,6 +56,7 @@ public:
 	std::list<SquashedEnemy*> squashedEnemies;
 	std::list<Projectile*> projectiles;
 	std::list<Item*> items;
+	std::list<Checkpoint*> checkpoints;
 
 	bool controlShoot = false;
 	int controlMoveX = 0;
@@ -67,4 +70,6 @@ public:
 	float scrollY = 0;
 	int mapWidth = 0;
 	int mapHeight = 0;
+	bool reachedCheckpoint = false;
+	Checkpoint* checkpoint;
 };
