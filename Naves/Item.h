@@ -6,10 +6,9 @@
 class Item : public Actor
 {
 public:
-	Item(float x, float y, int gravity);
+	Item(float x, float y);
 	void draw(int scrollX, int scrollY) override;
 	void update();
 
 	Animation* animation;
-	int gravity;
 };

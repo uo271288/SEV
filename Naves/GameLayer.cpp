@@ -482,7 +482,7 @@ void GameLayer::loadMapObject(char character, int x, int y) {
 		break;
 	}
 	case 'I': {
-		Item* item = new Item(x, y, GRAVITY);
+		Item* item = new Item(x, y);
 		item->y -= item->height / 2;
 		item->boundingBox.update(item->x, item->y);
 		items.emplace_back(item);
